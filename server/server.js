@@ -34,6 +34,7 @@ const pool = mysql.createPool({
 })
 
 // 7. Construct SQL - select all statement and insert one record
+const SQL_queryComputeOrdersView = `SELECT * from compute_orders WHERE id=?`
 
 // 8. Establish connection , take in params and query the RDBMS
 // this is a javascript closure. it construct a function with 2 parameters: sql and pool
@@ -46,8 +47,8 @@ const makeQuery = (sql, pool) => {
       let results = await conn.query(sql, args || []) // once okay, it will bind to database and return results
       console.log('results[0] ---> ', results[0])
       return results[0] // [0] is data, [1] is metadata
-    } catch (err) {
-      console.log(err)
+    } catch (error) {
+      console.log('Error in querying SQL ---> ', error)
     } finally {
       conn.release()
     }
@@ -63,17 +64,52 @@ const startApp = async (app, pool) => {
       console.log(`App started on ${APP_PORT}`)
     })
   } catch (error) {
-    console.log(error)
+    console.log('Error in connecting to database ---> ', error)
   } finally {
     conn.release
   }
 }
 
-// 9. Create the closure function for the end point to
-// perform crud operation against the database
+// 9a. Test homepage
+app.get('/', (req, res) => {
+  res.status(200)
+  res.type('application/json')
+  res.send({ Hello: 'Kitty' })
+})
 
+// 9b. Create the closure function for the end point to
+// perform crud operation against the database
+const executeComputeOrdersView = makeQuery(SQL_queryComputeOrdersView, pool)
+
+app.get('/order/total/:orderId', (req, res) => {
+  const orderIdParam = req.params.orderId
+  // console.log('orderIdParam ---> ', orderIdParam)
+  executeComputeOrdersView([orderIdParam])
+    .then((results) => {
+      res.format({
+        html: () => {
+          console.log('html --->')
+          res.status(200)
+          res.send('<h1>Hello Kitty</h1>' + JSON.stringify(results))
+        },
+        json: () => {
+          console.log('json ---> ')
+          res.status
+          res.json(results)
+        },
+      })
+    })
+    .catch((error) => {
+      console.log('error ---> ', error)
+      res.status(500)
+      res.send(error)
+    })
+})
+
+// 10. Redirects back to homepage if resource not found
 app.use((req, res) => {
   res.redirect('/')
 })
 
+// 11. Start the app
 startApp(app, pool)
