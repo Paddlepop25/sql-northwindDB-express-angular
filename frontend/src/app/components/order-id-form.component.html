@@ -1,0 +1,38 @@
+<div class="mt-5">
+  <h3>My Total Order Form</h3>
+</div>
+
+<form [formGroup]="orderIdForm">
+  <div class="form-group">
+    <label for="orderId">Please input the order ID</label>
+    <input
+      type="text"
+      class="form-control"
+      id="orderId"
+      placeholder="e.g. 32"
+      formControlName="orderId"
+    />
+    <small class="form-text text-muted">available from 30-81</small>
+  </div>
+  <button type="submit" class="btn btn-info" (click)="getOrderId()">
+    Submit
+  </button>
+</form>
+
+<div *ngFor="let ofd of orderFormDetails" class="mt-4">
+  <div class="card" style="width: 25rem">
+    <div class="card-body">
+      <h5 class="card-title">Order ID: {{ ofd.id }}</h5>
+      <p class="card-text">Order date: {{ ofd.order_date }}</p>
+      <p class="card-text">Customer ID: {{ ofd.customer_id }}</p>
+      <p class="card-text">Total quantity: {{ ofd.total_quantity }}</p>
+      <p class="card-text">Total discount: {{ ofd.total_discount }}</p>
+      <p class="card-text">Cost price: {{ ofd.cost_price }}</p>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="orderFormDetails" class="mt-3">
+  <h4>JSON representation</h4>
+  <p>{{ orderFormDetails | json }}</p>
+</div>
