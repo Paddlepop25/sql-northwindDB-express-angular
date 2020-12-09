@@ -8,15 +8,15 @@ export class OrderIdService {
   // what is this for?
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      'Content-Type': 'application/json',  // request (POST)
+      'Accept': 'application/json' // response (GET)
   })
 }
 
 constructor(private http: HttpClient) {}
 
 async getOrderDetails(orderId: string): Promise<any> {
-    const response = await this.http.get<any>(`${environment.apiUrl}/${orderId}`)
+    const response = await this.http.get<any>(`${environment.apiUrl}/${orderId}`, this.httpOptions)
     .toPromise()
     // must comment out, else order-id-form.component don't work
     // .then(result => {

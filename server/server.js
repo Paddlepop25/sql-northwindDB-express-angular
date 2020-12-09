@@ -101,7 +101,9 @@ app.get('/order/total/:orderId', (req, res) => {
           },
         })
       } else {
-        throw new Error('No record found') // check his code
+        res.type('html')
+        res.send('<h1>No record found</h1>')
+        throw new Error('No record found')
       }
     })
     .catch((error) => {
