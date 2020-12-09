@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { environment } from '../../environments/environment'
+import { OrderModel } from '../models/order.model'
 
 @Injectable()
 export class OrderIdService {
@@ -21,6 +22,22 @@ async getOrderDetails(orderId: string): Promise<any> {
     // .then(result => {
     //   console.log('result --->', result)
     // })
+
+    // .then(result => {
+    //   console.log('result --->', result) // can get details
+    //    result.map(order => {
+    //     return {
+    //       id: order['id'],
+    //       order_date: order['order_date'],
+    //       customer_id: order['customer_id'],
+    //       total_quantity: order['total_quantity'],
+    //       total_discount: order['total_discount'],
+    //       cost_price: order['cost_price'],
+    //     } as OrderModel
+    //   })
+    //   return result
+    // })
+
     .catch((error: HttpErrorResponse) => {
       console.log('HttpError ---> ', error)
     })

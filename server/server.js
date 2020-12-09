@@ -86,18 +86,23 @@ app.get('/order/total/:orderId', (req, res) => {
   // console.log('orderIdParam ---> ', orderIdParam)
   executeComputeOrdersView([orderIdParam])
     .then((results) => {
-      res.format({
-        html: () => {
-          console.log('html --->')
-          res.status(200)
-          res.send('<h1>Hello Kitty</h1>' + JSON.stringify(results))
-        },
-        json: () => {
-          console.log('json ---> ')
-          res.status
-          res.json(results)
-        },
-      })
+      console.log('results.length ---> ', results.length)
+      if (results.length > 0) {
+        res.format({
+          html: () => {
+            console.log('html --->')
+            res.status(200)
+            res.send('<h1>Hello Kitty</h1>' + JSON.stringify(results))
+          },
+          json: () => {
+            console.log('json ---> ')
+            res.status
+            res.json(results)
+          },
+        })
+      } else {
+        throw new Error('No record found') // check his code
+      }
     })
     .catch((error) => {
       console.log('error ---> ', error)
